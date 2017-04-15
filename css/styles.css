@@ -1,0 +1,12 @@
+h1 {
+    color: blue;
+}
+button {
+    color: white;
+    background-color: rgb(52, 74, 95);
+    height: 50px;
+    width: 50px;
+    font-style: italic;
+    font-weight: bold;
+    margin: 3px 3px 3px 3px;
+}
