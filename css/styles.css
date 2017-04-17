@@ -10,3 +10,10 @@ button {
     font-weight: bold;
     margin: 3px 3px 3px 3px;
 }
+#game_word {
+    font-family: arial black;
+    font-size: 30px;
+}
+#playAgain {
+    width:300px;
+}
