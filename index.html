@@ -26,21 +26,19 @@
   <div class= "container">
     <div class= "row">
         <!-- empty hangman noose here -->
-
      <canvas id="myCanvas" "col-xs-12" width="200" height= "100" style="border:1px solid #000000;">
-     </canvas>
-
+       </canvas>
+       <!-- win/lose gif here -->
+     <div id= "image">
+     <img id= "gif" src="" />
+     <p id= "feedback" hidden= "true"></p>
+     <p id= "loader" hiden= "true"></p>
+     </div>
+        <!-- game blank spaces here -->
       <div class= "row">
-
-        <div id= "header">
-          <div class = "col-xs-12">
-          <p>You have <span id= "lives"></span> lives left.</p>
-            <br>
-
-          </p>
+        <div class = "col-xs-12">
           <h1 id= "WORD">_ _ _ _ </h1>
           <br><br>
-         </div>
       </div>
     </div>
     <div class= "row" id= "letterbank">
@@ -80,11 +78,7 @@
     <div class= "row">
       <divclass = "col-xs-12"><button id="playAgainButton" onClick = "newGame()" class="btn-block">PLAY AGAIN</button></div>
     </div>
-
 </div>
   <script type= "text/javascript" src= "scripts/hang_man.js"></script>
-
-
 </body>
-
 </html>

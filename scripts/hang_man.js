@@ -12,7 +12,8 @@ var model= {
   numWrong: 0,
   // current Game Word
   word: "",
-  wordLine: ""
+  wordLine: "",
+  result: ""
 }
 
 // list of game words
@@ -23,6 +24,12 @@ var launchCodeWords = ["launchcode", "javascript",
       "framework", "bootstrap","database", "github",
       "version control", "hypertext markup language",
       "attribute", "developer", "command line"]
+
+
+$(document).ready(function(){
+  setGameboard();
+  updateLetter();
+});
 
 // select random entry from launchCodeWords array
 function getLaunchCodeWord() {
@@ -55,13 +62,11 @@ function updateLetter(letter) {
       changes = changes + 1;
     }
   }
-
   if(changes < 1) {
     model.lives -= 1;
     model.numWrong = model.numWrong + 1;
     $("#lives").html(model.lives);
   }
-
   model.wordLine = model.gameLines.join("");
   $("#WORD").html(model.wordLine);
 
@@ -71,6 +76,7 @@ function updateLetter(letter) {
   word1 = word1.replace(/\s/g, '');
   word2 = word2.replace(/\s/g, '');
 
+  // add body parts to hangman image
   if(model.numWrong == 2){
     head();
   }
@@ -90,11 +96,13 @@ function updateLetter(letter) {
     rightLeg();
   }
   if(word1 == word2) {
-    alert("Winner");
+    model.result = "victory";
+    endGame();
   }
   if (model.lives < 1) {
     $("#WORD").html(model.word);
-    alert("Loser");
+    model.result = "game over";
+    endGame();
   }
 }
 
@@ -117,6 +125,8 @@ function newGame(){
   model.word = "";
   model.wordLine = "";
   model.numWrong = 1;
+  model.result = "";
+  $("#gif").hide();
   $("#lives").html(model.lives);
   clearCanvas();
   resetLetterBank();
@@ -408,7 +418,56 @@ function rightLeg(){
     ctx.stroke();
 }
 
-console.log(getLaunchCodeWord());
-console.log(setGameboard());
-console.log(updateLetter());
+
+function endGame() {
+    if (model.result=="victory") {
+        (fetchAndDisplayGif());
+    }else
+      console.log(model.result);
+      if (model.result=="game over"){
+      (fetchAndDisplayGif());
+    }
+}
+
+function fetchAndDisplayGif(event) {
+    //parameters to attach to our request
+    var params = {
+        api_key: "dc6zaTOxFJmzC",
+        //send request for win or lose GIF
+        tag : model.result
+    };
+    $("#loader").toggle();
+    // make an ajax request for a random GIF
+    $.ajax({
+        url: "https://api.giphy.com/v1/gifs/random",
+        data: params,
+        success: function(response) {
+            console.log("we received a response!");
+            console.log(response);
+
+            var image = response.data.image_url;
+            $("#gif").attr("src", image);
+            $("#feedback").show();
+            $("#gif").show();
+            $("#loader").toggle();
+        },
+        error: function() {
+            $("#feedback").text("Sorry, could not load GIF. Try again!");
+            setGifLoadedStatus(false);
+        }
+    });
+}
+
+/**
+ * toggles the visibility of UI elements based on whether a GIF is currently loaded.
+ * if the GIF is loaded: displays the image and hides the feedback label
+ * otherwise: hides the image and displays the feedback label
+ */
+function setGifLoadedStatus(isCurrentlyLoaded) {
+    $("#gif").attr("hidden", !isCurrentlyLoaded);
+    $("#feedback").attr("hidden", isCurrentlyLoaded);
+}
+
+
+
 console.log("end");
