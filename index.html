@@ -15,10 +15,10 @@
 </head>
 <body>
     <!-- set up Bootstrap container for heading -->
-  <div class= "container">
+  <div class= "container-fluid">
     <div class= "row">
       <div class = "col-xs-12">
-      <h1>HANG_man</h1>
+      <h1>Hangman</h1>
       </div>
     </div>
   </div>
@@ -29,11 +29,15 @@
      <canvas id="myCanvas" "col-xs-12" width="200" height= "100" style="border:1px solid #000000;">
        </canvas>
        <!-- win/lose gif here -->
-     <div id= "image">
-     <img id= "gif" src="" />
-     <p id= "feedback" hidden= "true"></p>
-     <p id= "loader" hiden= "true"></p>
+     <div id= "image" "col-xs-12">
+       <img id= "gif" src="" class= "img-responsive"/>
+       <p id= "feedback" hidden= "true"></p>
+       <p id= "loader" hiden= "true"></p>
      </div>
+        <!-- game result here -->
+     <div "col-xs-12">
+       <h1 id= "result">Game result</h1>
+       <br>
         <!-- game blank spaces here -->
       <div class= "row">
         <div class = "col-xs-12">

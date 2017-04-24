@@ -40,6 +40,7 @@ function getLaunchCodeWord() {
 // create game board with appropriate blank lines
 // and spaces between words
 function setGameboard(){
+  $("#result").empty();
   hangman();
   getLaunchCodeWord();
   for (var i= 0; i< model.word.length; i++) {
@@ -421,11 +422,12 @@ function rightLeg(){
 
 function endGame() {
     if (model.result=="victory") {
-        (fetchAndDisplayGif());
+      (fetchAndDisplayGif());
+      $("#result").html("You Win!");
     }else
-      console.log(model.result);
       if (model.result=="game over"){
       (fetchAndDisplayGif());
+      $("#result").html("Try Again :(");
     }
 }
 

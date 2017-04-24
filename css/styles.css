@@ -10,7 +10,8 @@ h1 {
   width: auto;
 }
 #letterbank {
-  line-height: 45px;
+  line-height:45px;
+
 }
 #letters a {
     color: white;
@@ -21,6 +22,7 @@ h1 {
     margin: 0px; 3px; 3px; 0px;
     cursor: pointer;
     text-align: center;
+
 }
 #letters a:hover {
   background-color: red;
@@ -43,15 +45,21 @@ h1 {
 }
 #myCanvas{
   width: 100%;
-  height: 250px;
+  height: 200px;
   text-align: center;
+  padding: 0;
+  margin: 20px auto 0 auto;
 }
 .disabled {
   opacity: 0.5;
   color: black;
 }
 #image {
-    margin: 20px 20% 10px 20%;
-    height:50px;
-    width: 50px;
+  text-align: center;
+  width: 100%;
+
+}
+#result {
+  font-family:"Comic Sans MS", cursive, sans-serif;
+  color: green;
 }
