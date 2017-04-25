@@ -7,13 +7,15 @@ var model= {
   // individual blank lines of current Game Word
   gameLines: [],
   // Total lives for game
-  lives: 7,
+  lives: 6,
   //number of incorrect guesses
   numWrong: 0,
   // current Game Word
   word: "",
   wordLine: "",
-  result: ""
+  result: "",
+  // current selected category
+  category: ""
 }
 
 // list of game words
@@ -25,24 +27,66 @@ var launchCodeWords = ["launchcode", "javascript",
       "version control", "hypertext markup language",
       "attribute", "developer", "command line"]
 
+var videoGameWords = ["mario", "yoshi"]
+
+var kansasCityWords = ["chiefs", "royals"]
+
+var randomWords = ["random"]
 
 $(document).ready(function(){
-  setGameboard();
-  updateLetter();
+  $("#intropage").show();
+  $("#gamepage").hide();
 });
 
+function changeCategory() {
+  $("#intropage").show();
+  $("#gamepage").hide();
+  model.category = "";
+  newGame();
+}
+
+// select random entry from randomWords array
+function getrandomWords() {
+  rand = [Math.floor(Math.random() * randomWords.length)];
+  model.word = randomWords[rand];
+  model.category = "randomWords";
+  setGameboard();
+}
+
+// select random entry from kansasCityWords array
+function getkansasCityWords() {
+  rand = [Math.floor(Math.random() * kansasCityWords.length)];
+  model.word = kansasCityWords[rand];
+  model.category = "kansasCityWords";
+  setGameboard();
+}
+
+// select random entry from videoGameWords array
+function getvideoGameWords() {
+  rand = [Math.floor(Math.random() * videoGameWords.length)];
+  model.word = videoGameWords[rand];
+  model.category = "videoGameWords";
+  setGameboard();
+}
+
 // select random entry from launchCodeWords array
-function getLaunchCodeWord() {
+function getlaunchCodeWords() {
   rand = [Math.floor(Math.random() * launchCodeWords.length)];
   model.word = launchCodeWords[rand];
+  model.category = "launchCodeWords";
+  setGameboard();
 }
+
 
 // create game board with appropriate blank lines
 // and spaces between words
 function setGameboard(){
+  console.log("here!");
+  $("#intropage").hide();
+  $("#gamepage").show();
   $("#result").empty();
   hangman();
-  getLaunchCodeWord();
+  console.log(model.word);
   for (var i= 0; i< model.word.length; i++) {
     model.gameWord[i] = model.word.charAt(i);
     if (model.gameWord[i] === " "){
@@ -50,6 +94,7 @@ function setGameboard(){
     }else{
     model.gameLines[i] = "_ ";
    }
+   $("#WORD").html(model.gameLines);
   }
 }
 
@@ -78,22 +123,22 @@ function updateLetter(letter) {
   word2 = word2.replace(/\s/g, '');
 
   // add body parts to hangman image
-  if(model.numWrong == 2){
+  if(model.numWrong == 1){
     head();
   }
-  if(model.numWrong == 3){
+  if(model.numWrong == 2){
     body();
   }
-  if(model.numWrong == 4){
+  if(model.numWrong == 3){
     leftArm();
   }
-  if(model.numWrong == 5){
+  if(model.numWrong == 4){
     rightArm();
   }
-  if(model.numWrong == 6){
+  if(model.numWrong == 5){
     leftLeg();
   }
-  if(model.numWrong == 7){
+  if(model.numWrong == 6){
     rightLeg();
   }
   if(word1 == word2) {
@@ -125,13 +170,25 @@ function newGame(){
   model.lives = 6;
   model.word = "";
   model.wordLine = "";
-  model.numWrong = 1;
+  model.numWrong = 0;
   model.result = "";
   $("#gif").hide();
   $("#lives").html(model.lives);
   clearCanvas();
   resetLetterBank();
-  setGameboard();
+  //setGameboard();
+  if(model.category == "randomWords"){
+    getrandomWords();
+  }
+  if(model.category == "kansasCityWords"){
+    getkansasCityWords();
+  }
+  if(model.category == "videoGameWords"){
+    getvideoGameWords();
+  }
+  if(model.category == "launchCodeWords"){
+    getlaunchCodeWords();
+  }
   $("#WORD").html(model.gameLines);
 }
 

@@ -14,8 +14,40 @@
 
 </head>
 <body>
+  <div id= "intropage">
+    <div class= "container-fluid jumbotron">
+      <div class= "row">
+        <div class = "col-xs-12">
+        <h1>Hangman</h1>
+        </div>
+      </div>
+    </div>
+    <div class= "container">
+      <div class= "row">
+        <div class= "col-xs-12">
+          <span id="category"><h3>Choose a Category</h3></span>
+        </div>
+      </div>
+    </div>
+    <div class= "container">
+      <div class= "row">
+        <div class= "col-xs-12">
+          <div id="category">
+          <button type = "button" class="btn btn-primary btn-lg" onclick="getlaunchCodeWords()">LaunchCode</button>
+          &nbsp&nbsp&nbsp&nbsp
+          <button type = "button" class="btn btn-primary btn-lg" onclick="getvideoGameWords()">Video Games</button>
+          <br><br>
+          <button type = "button" class="btn btn-primary btn-lg" onclick="getkansasCityWords()">Kansas City</button>
+          &nbsp&nbsp&nbsp&nbsp
+          <button type = "button" class="btn btn-primary btn-lg" onclick="getrandomWords()">Random</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id= "gamepage">
     <!-- set up Bootstrap container for heading -->
-  <div class= "container-fluid">
+  <div class= "container-fluid jumbotron">
     <div class= "row">
       <div class = "col-xs-12">
       <h1>Hangman</h1>
@@ -80,8 +112,12 @@
     </div>
   </div>
     <div class= "row">
-      <divclass = "col-xs-12"><button id="playAgainButton" onClick = "newGame()" class="btn-block">PLAY AGAIN</button></div>
+      <divclass = "col-xs-12">
+        <button id="playAgainButton" onClick = "newGame()" class="btn-block">PLAY AGAIN</button>
+        <button id="playAgainButton" onClick = "changeCategory()" class="btn-block">CHANGE CATEGORY</button>
+      </div>
     </div>
+</div>
 </div>
   <script type= "text/javascript" src= "scripts/hang_man.js"></script>
 </body>
