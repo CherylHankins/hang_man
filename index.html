@@ -3,22 +3,24 @@
 <head>
   <title>Hang_man</title>
 
-    <!-- jQuery -->
+    <!-- angularjs -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-2.2.3.js"></script>
-
+   <!-- my javascript page -->
+  <script type= "text/javascript" src= "scripts/hang_man.js"></script>
     <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
-
-    <!-- our CSS -->
+    <!-- my CSS page-->
   <link rel="stylesheet" href="css/styles.css"/>
 
 </head>
-<body>
-  <div id= "intropage">
+<body ng-app="Hang_man" ng-controller="GameController">
+  <div id= "intropage" ng-show = "intropage">
     <div class= "container-fluid jumbotron">
       <div class= "row">
         <div class = "col-xs-12">
-        <h1>Hangman</h1>
+        <h1>Hangman with Angular</h1>
         </div>
       </div>
     </div>
@@ -33,32 +35,32 @@
       <div class= "row">
         <div class= "col-xs-12">
           <div id="category">
-          <button type = "button" class="btn btn-primary btn-lg" onclick="getlaunchCodeWords()">LaunchCode</button>
+          <button type = "button" class="btn btn-primary btn-lg" ng-click="getlaunchCodeWords()">LaunchCode</button>
           &nbsp&nbsp&nbsp&nbsp
-          <button type = "button" class="btn btn-primary btn-lg" onclick="getvideoGameWords()">Video Games</button>
+          <button type = "button" class="btn btn-primary btn-lg" ng-click="getvideoGameWords()">Video Games</button>
           <br><br>
-          <button type = "button" class="btn btn-primary btn-lg" onclick="getkansasCityWords()">Kansas City</button>
+          <button type = "button" class="btn btn-primary btn-lg" ng-click="getkansasCityWords()">Kansas City</button>
           &nbsp&nbsp&nbsp&nbsp
-          <button type = "button" class="btn btn-primary btn-lg" onclick="getrandomWords()">Random</button>
+          <button type = "button" class="btn btn-primary btn-lg" ng-click="getrandomWords()">Random</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div id= "gamepage">
+  <div id= "gamepage" ng-show = "gamepage">
     <!-- set up Bootstrap container for heading -->
   <div class= "container-fluid jumbotron">
     <div class= "row">
       <div class = "col-xs-12">
-      <h1>Hangman</h1>
+      <h1>Hangman with Angular</h1>
       </div>
     </div>
   </div>
-    <!-- set up Bootstrap container for game area -->
+      <!-- set up Bootstrap container for game area -->
   <div class= "container">
     <div class= "row">
         <!-- empty hangman noose here -->
-     <canvas id="myCanvas" "col-xs-12" width="200" height= "100" style="border:1px solid #000000;">
+     <canvas id="myCanvas" "col-xs-12" width="200" height= "200" style="border:1px solid #000000;">
        </canvas>
        <!-- win/lose gif here -->
      <div id= "image" "col-xs-12">
@@ -68,57 +70,57 @@
      </div>
         <!-- game result here -->
      <div "col-xs-12">
-       <h1 id= "result">Game result</h1>
+       <h1 id= "result">  {{displayresult}} </h1>
        <br>
+     </div>
         <!-- game blank spaces here -->
       <div class= "row">
         <div class = "col-xs-12">
-          <h1 id= "WORD">_ _ _ _ </h1>
+          <h1 id= "WORD"> {{wordLine}} </h1>
           <br>
+        </div>
       </div>
-    </div>
     <div class= "row" id= "letterbank">
       <div class = "col-xs-12">
     <!-- interactive letter selection here -->
     <!-- may need to change, taking up too much space -->
-      <div id="letters">
-        <a id="a" class="btn-sm">A</a>
-        <a id="b" class="btn-sm">B</a>
-        <a id="c" class="btn-sm">C</a>
-        <a id="d" class="btn-sm">D</a>
-        <a id="e" class="btn-sm">E</a>
-        <a id="f" class="btn-sm">F</a>
-        <a id="g" class="btn-sm">G</a>
-        <a id="h" class="btn-sm">H</a>
-        <a id="i" class="btn-sm">I</a>
-        <a id="j" class="btn-sm">J</a>
-        <a id="k" class="btn-sm">K</a>
-        <a id="l" class="btn-sm">L</a>
-        <a id="m" class="btn-sm">M</a>
-        <a id="n" class="btn-sm">N</a>
-        <a id="o" class="btn-sm">O</a>
-        <a id="p" class="btn-sm">P</a>
-        <a id="q" class="btn-sm">Q</a>
-        <a id="r" class="btn-sm">R</a>
-        <a id="s" class="btn-sm">S</a>
-        <a id="t" class="btn-sm">T</a>
-        <a id="u" class="btn-sm">U</a>
-        <a id="v" class="btn-sm">V</a>
-        <a id="w" class="btn-sm">W</a>
-        <a id="x" class="btn-sm">X</a>
-        <a id="y" class="btn-sm">Y</a>
-        <a id="z" class="btn-sm">Z</a>
+        <div id="letters">
+          <input type='button' id="a" class="btn-sm"  ng-click="updateLetter('a')" value = 'A' />
+          <input type='button' id="b" class="btn-sm"  ng-click="updateLetter('b')" value = 'B' />
+          <input type='button' id="c" class="btn-sm"  ng-click="updateLetter('c')" value = 'C' />
+          <input type='button' id="d" class="btn-sm"  ng-click="updateLetter('d')" value = 'D' />
+          <input type='button' id="e" class="btn-sm"  ng-click="updateLetter('e')" value = 'E' />
+          <input type='button' id="f" class="btn-sm"  ng-click="updateLetter('f')" value = 'F' />
+          <input type='button' id="g" class="btn-sm"  ng-click="updateLetter('g')" value = 'G' />
+          <input type='button' id="h" class="btn-sm"  ng-click="updateLetter('h')" value = 'H' />
+          <input type='button' id="i" class="btn-sm"  ng-click="updateLetter('i')" value = 'I' />
+          <input type='button' id="j" class="btn-sm"  ng-click="updateLetter('j')" value = 'J' />
+          <input type='button' id="k" class="btn-sm"  ng-click="updateLetter('k')" value = 'K' />
+          <input type='button' id="l" class="btn-sm"  ng-click="updateLetter('l')" value = 'L' />
+          <input type='button' id="m" class="btn-sm"  ng-click="updateLetter('m')" value = 'M' />
+          <input type='button' id="n" class="btn-sm"  ng-click="updateLetter('n')" value = 'N' />
+          <input type='button' id="o" class="btn-sm"  ng-click="updateLetter('o')" value = 'O' />
+          <input type='button' id="p" class="btn-sm"  ng-click="updateLetter('p')" value = 'P' />
+          <input type='button' id="q" class="btn-sm"  ng-click="updateLetter('q')" value = 'Q' />
+          <input type='button' id="r" class="btn-sm"  ng-click="updateLetter('r')" value = 'R' />
+          <input type='button' id="s" class="btn-sm"  ng-click="updateLetter('s')" value = 'S' />
+          <input type='button' id="t" class="btn-sm"  ng-click="updateLetter('t')" value = 'T' />
+          <input type='button' id="u" class="btn-sm"  ng-click="updateLetter('u')" value = 'U' />
+          <input type='button' id="v" class="btn-sm"  ng-click="updateLetter('v')" value = 'V' />
+          <input type='button' id="w" class="btn-sm"  ng-click="updateLetter('w')" value = 'W' />
+          <input type='button' id="x" class="btn-sm"  ng-click="updateLetter('x')" value = 'X' />
+          <input type='button' id="y" class="btn-sm"  ng-click="updateLetter('y')" value = 'Y' />
+          <input type='button' id="z" class="btn-sm"  ng-click="updateLetter('z')" value = 'Z' />
+        </div>
+      </div>
+    </div>
+    <div class= "row">
+      <div class = "col-xs-12">
+        <button  id="playAgainButton" ng-click = "newGame()" class="btn-block">PLAY AGAIN</button>
+        <button  id="playAgainButton" ng-click = "changeCategory()" class="btn-block">CHANGE CATEGORY</button>
       </div>
     </div>
   </div>
-    <div class= "row">
-      <divclass = "col-xs-12">
-        <button id="playAgainButton" onClick = "newGame()" class="btn-block">PLAY AGAIN</button>
-        <button id="playAgainButton" onClick = "changeCategory()" class="btn-block">CHANGE CATEGORY</button>
-      </div>
-    </div>
 </div>
-</div>
-  <script type= "text/javascript" src= "scripts/hang_man.js"></script>
 </body>
 </html>

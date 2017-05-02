@@ -1,499 +1,634 @@
-console.log("start");
+var app=angular.module("Hang_man", []);
+app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
+
+
+var launchCodeWords = ["launchcode", "javascript",
+          "python", "cascading style sheet", "document",
+          "object oriented programming", "function",
+          "server", "frontend", "backend", "attribute",
+          "framework", "bootstrap","database", "github",
+          "version control", "hypertext markup language",
+          "attribute", "developer", "command line"];
+
+var videoGameWords = ["mario", "yoshi", "sega", "link"];
+
+var kansasCityWords = ["chiefs", "royals", "kauffman", "bar b que", "liberty memorial", "crown center",
+                         "jazz", "union station", "missouri", "kansas", "westport",
+                          "brookside", "wprlds of fun", "sprint", "country club plaza",
+                          "sporting kc", "american royal","loose park",
+                          "swope park", "harry truman"];
+
+var randomWords = ["two words", "random"];
 
 // things we need to keep track of
-var model= {
+
   // individual letters of current Game Word
-  gameWord: [],
+$scope.gameWord=[];
   // individual blank lines of current Game Word
-  gameLines: [],
-  // Total lives for game
-  lives: 6,
+$scope.gameLines=[];
+  // total lives for game
+$scope.lives = 6;
   //number of incorrect guesses
-  numWrong: 0,
+$scope.numWrong = 0;
   // current Game Word
-  word: "",
-  wordLine: "",
-  result: "",
-  // current selected category
-  category: ""
-}
+$scope.word="";
+$scope.wordLine="";
+  //result of current game
+$scope.result = "";
+  //current category selected
+$scope.category = "";
+ // all guesses for current game
+$scope.guesses = [];
+$scope.intropage = true;
+$scope.gamepage = false;
 
-// list of game words
-var launchCodeWords = ["launchcode", "javascript",
-      "python", "cascading style sheet", "document",
-      "object oriented programming", "function",
-      "server", "frontend", "backend", "attribute",
-      "framework", "bootstrap","database", "github",
-      "version control", "hypertext markup language",
-      "attribute", "developer", "command line"]
-
-var videoGameWords = ["mario", "yoshi"]
-
-var kansasCityWords = ["chiefs", "royals"]
-
-var randomWords = ["random"]
-
-$(document).ready(function(){
-  $("#intropage").show();
-  $("#gamepage").hide();
-});
-
-function changeCategory() {
-  $("#intropage").show();
-  $("#gamepage").hide();
-  model.category = "";
-  newGame();
-}
-
-// select random entry from randomWords array
-function getrandomWords() {
+// select random word from selected category
+$scope.getrandomWords = function(){
   rand = [Math.floor(Math.random() * randomWords.length)];
-  model.word = randomWords[rand];
-  model.category = "randomWords";
+  $scope.word = randomWords[rand];
+  $scope.category = "randomWords";
   setGameboard();
 }
 
-// select random entry from kansasCityWords array
-function getkansasCityWords() {
+$scope.getkansasCityWords = function(){
   rand = [Math.floor(Math.random() * kansasCityWords.length)];
-  model.word = kansasCityWords[rand];
-  model.category = "kansasCityWords";
+  $scope.word = kansasCityWords[rand];
+  $scope.category = "kansasCityWords";
   setGameboard();
 }
 
-// select random entry from videoGameWords array
-function getvideoGameWords() {
+$scope.getvideoGameWords = function(){
   rand = [Math.floor(Math.random() * videoGameWords.length)];
-  model.word = videoGameWords[rand];
-  model.category = "videoGameWords";
+  $scope.word = videoGameWords[rand];
+  $scope.category = "videoGameWords";
   setGameboard();
 }
 
-// select random entry from launchCodeWords array
-function getlaunchCodeWords() {
+$scope.getlaunchCodeWords = function(){
   rand = [Math.floor(Math.random() * launchCodeWords.length)];
-  model.word = launchCodeWords[rand];
-  model.category = "launchCodeWords";
+  $scope.word = launchCodeWords[rand];
+  $scope.category = "launchCodeWords";
   setGameboard();
 }
 
-
-// create game board with appropriate blank lines
-// and spaces between words
-function setGameboard(){
-  console.log("here!");
-  $("#intropage").hide();
-  $("#gamepage").show();
-  $("#result").empty();
+//set blank spaces for the gameword
+var setGameboard = function(){
+  $scope.intropage = false;
+  $scope.gamepage = true;
   hangman();
-  console.log(model.word);
-  for (var i= 0; i< model.word.length; i++) {
-    model.gameWord[i] = model.word.charAt(i);
-    if (model.gameWord[i] === " "){
-      model.gameLines[i] = "\u00A0\u00A0";
+  for (var i= 0; i< $scope.word.length; i++) {
+    $scope.gameWord[i] = $scope.word.charAt(i);
+    if ($scope.gameWord[i] === " "){
+      $scope.gameLines[i] = "\u00A0\u00A0";
     }else{
-    model.gameLines[i] = "_ ";
+    $scope.gameLines[i] = "_ ";
    }
-   $("#WORD").html(model.gameLines);
+   $scope.wordLine = $scope.gameLines.join("");
   }
 }
 
-// update letter in Gameword or hangman image
-function updateLetter(letter) {
-  var changes = 0;
-  for (var i= 0; i< model.word.length; i++) {
-    model.gameWord[i] = model.word.charAt(i);
-    if (model.word.charAt(i) == letter) {
-      model.gameLines[i] = letter;
-      changes = changes + 1;
+//review guessed letter, add correct guessed
+//letter to gameboard, add body part for
+//incorrect guessed letter
+$scope.updateLetter = function(letter) {
+  if($scope.guesses.indexOf(letter) == -1){
+    $scope.guesses.push(letter);
+    var changes = 0;
+    for (var i= 0; i< $scope.word.length; i++) {
+      $scope.gameWord[i] = $scope.word.charAt(i);
+      if ($scope.word.charAt(i) == letter) {
+        $scope.gameLines[i] = letter;
+        changes = changes + 1;
+      }
+    }
+    if(changes < 1) {
+      $scope.lives -= 1;
+      $scope.numWrong = $scope.numWrong + 1;
+      }
+    $scope.wordLine = $scope.gameLines.join("");
+    var word1 = $scope.gameWord.join("");
+    var word2 = $scope.gameLines.join("");
+
+    word1 = word1.replace(/\s/g, '');
+    word2 = word2.replace(/\s/g, '');
+
+    // add body parts to hangman image
+    if($scope.numWrong == 1){
+      head1();
+    }
+    if($scope.numWrong == 2){
+      body();
+    }
+    if($scope.numWrong == 3){
+      clearCanvas();
+      hangman();
+      head2();
+      body();
+      leftArm();
+    }
+    if($scope.numWrong == 4){
+      clearCanvas();
+      hangman();
+      head2();
+      body();
+      leftArm();
+      rightArm1();
+    }
+    if($scope.numWrong == 5){
+      clearCanvas();
+      hangman();
+      head3();
+      body();
+      leftArm();
+      rightArm2();
+      leftLeg();
+    }
+    if($scope.numWrong == 6){
+      clearCanvas();
+      hangman();
+      head4();
+      body();
+      leftArm();
+      rightArm3();
+      leftLeg();
+      rightLeg();
+    }
+    if(word1 == word2) {
+      $scope.result = "victory";
+      $scope.endGame();
+    }
+    if ($scope.lives < 1) {
+      $scope.wordLine = $scope.word;
+      $scope.result = "game over";
+      $scope.endGame();
+    }
+  $scope.isDisabled(letter);
+  }
+}
+
+//add disable class to button of letter chosen
+$scope.isDisabled = function(letter){
+  if($scope.guesses.indexOf(letter) >= 0) {
+    if(letter == "a"){
+      angular.element(document.querySelector("#a")).addClass("disabled");
+    }
+    if(letter == "b"){
+      angular.element(document.querySelector("#b")).addClass("disabled");
+    }
+    if(letter == "c"){
+      angular.element(document.querySelector("#c")).addClass("disabled");
+    }
+    if(letter == "d"){
+      angular.element(document.querySelector("#d")).addClass("disabled");
+    }
+    if(letter == "e"){
+      angular.element(document.querySelector("#e")).addClass("disabled");
+    }
+    if(letter == "f"){
+      angular.element(document.querySelector("#f")).addClass("disabled");
+    }
+    if(letter == "g"){
+      angular.element(document.querySelector("#g")).addClass("disabled");
+    }
+    if(letter == "h"){
+      angular.element(document.querySelector("#h")).addClass("disabled");
+    }
+    if(letter == "i"){
+      angular.element(document.querySelector("#i")).addClass("disabled");
+    }
+    if(letter == "j"){
+      angular.element(document.querySelector("#j")).addClass("disabled");
+    }
+    if(letter == "k"){
+      angular.element(document.querySelector("#k")).addClass("disabled");
+    }
+    if(letter == "l"){
+      angular.element(document.querySelector("#l")).addClass("disabled");
+    }
+    if(letter == "m"){
+      angular.element(document.querySelector("#m")).addClass("disabled");
+    }
+    if(letter == "n"){
+      angular.element(document.querySelector("#n")).addClass("disabled");
+    }
+    if(letter == "o"){
+      angular.element(document.querySelector("#o")).addClass("disabled");
+    }
+    if(letter == "p"){
+      angular.element(document.querySelector("#p")).addClass("disabled");
+    }
+    if(letter == "q"){
+      angular.element(document.querySelector("#q")).addClass("disabled");
+    }
+    if(letter == "r"){
+      angular.element(document.querySelector("#r")).addClass("disabled");
+    }
+    if(letter == "s"){
+      angular.element(document.querySelector("#s")).addClass("disabled");
+    }
+    if(letter == "t"){
+      angular.element(document.querySelector("#t")).addClass("disabled");
+    }
+    if(letter == "u"){
+      angular.element(document.querySelector("#u")).addClass("disabled");
+    }
+    if(letter == "v"){
+      angular.element(document.querySelector("#v")).addClass("disabled");
+    }
+    if(letter == "w"){
+      angular.element(document.querySelector("#w")).addClass("disabled");
+    }
+    if(letter == "x"){
+      angular.element(document.querySelector("#x")).addClass("disabled");
+    }
+    if(letter == "y"){
+      angular.element(document.querySelector("#y")).addClass("disabled");
+    }
+    if(letter == "z"){
+      angular.element(document.querySelector("#z")).addClass("disabled");
     }
   }
-  if(changes < 1) {
-    model.lives -= 1;
-    model.numWrong = model.numWrong + 1;
-    $("#lives").html(model.lives);
-  }
-  model.wordLine = model.gameLines.join("");
-  $("#WORD").html(model.wordLine);
-
-  var word1 = model.gameWord.join("");
-  var word2 = model.gameLines.join("");
-
-  word1 = word1.replace(/\s/g, '');
-  word2 = word2.replace(/\s/g, '');
-
-  // add body parts to hangman image
-  if(model.numWrong == 1){
-    head();
-  }
-  if(model.numWrong == 2){
-    body();
-  }
-  if(model.numWrong == 3){
-    leftArm();
-  }
-  if(model.numWrong == 4){
-    rightArm();
-  }
-  if(model.numWrong == 5){
-    leftLeg();
-  }
-  if(model.numWrong == 6){
-    rightLeg();
-  }
-  if(word1 == word2) {
-    model.result = "victory";
-    endGame();
-  }
-  if (model.lives < 1) {
-    $("#WORD").html(model.word);
-    model.result = "game over";
-    endGame();
-  }
 }
 
-//clear hangman image
-function clearCanvas(){
+//fetch gif for win/lose
+$scope.endGame = function(){
+  if ($scope.result=="victory") {
+      fetchAndDisplayGif();
+      $scope.displayresult = "You Win!";
+    }else
+      if ($scope.result=="game over"){
+      fetchAndDisplayGif();
+      $scope.displayresult = "Try Again :(";
+    }
+  angular.element(document.querySelector("#a")).addClass("disabled");
+  angular.element(document.querySelector("#b")).addClass("disabled");
+  angular.element(document.querySelector("#c")).addClass("disabled");
+  angular.element(document.querySelector("#d")).addClass("disabled");
+  angular.element(document.querySelector("#e")).addClass("disabled");
+  angular.element(document.querySelector("#f")).addClass("disabled");
+  angular.element(document.querySelector("#g")).addClass("disabled");
+  angular.element(document.querySelector("#h")).addClass("disabled");
+  angular.element(document.querySelector("#i")).addClass("disabled");
+  angular.element(document.querySelector("#j")).addClass("disabled");
+  angular.element(document.querySelector("#k")).addClass("disabled");
+  angular.element(document.querySelector("#l")).addClass("disabled");
+  angular.element(document.querySelector("#m")).addClass("disabled");
+  angular.element(document.querySelector("#n")).addClass("disabled");
+  angular.element(document.querySelector("#o")).addClass("disabled");
+  angular.element(document.querySelector("#p")).addClass("disabled");
+  angular.element(document.querySelector("#q")).addClass("disabled");
+  angular.element(document.querySelector("#r")).addClass("disabled");
+  angular.element(document.querySelector("#s")).addClass("disabled");
+  angular.element(document.querySelector("#t")).addClass("disabled");
+  angular.element(document.querySelector("#u")).addClass("disabled");
+  angular.element(document.querySelector("#v")).addClass("disabled");
+  angular.element(document.querySelector("#w")).addClass("disabled");
+  angular.element(document.querySelector("#x")).addClass("disabled");
+  angular.element(document.querySelector("#y")).addClass("disabled");
+  angular.element(document.querySelector("#z")).addClass("disabled");
+  }
+
+//start new game with new category selection
+$scope.changeCategory = function(){
+  $scope.category = "";
+  $scope.gamepage = false;
+  $scope.intropage = true;
+  $scope.newGame();
+}
+
+//start new game
+$scope.newGame = function(){
+  $scope.gameWord=[];
+  $scope.gameLines=[];
+  $scope.lives = 6;
+  $scope.numWrong = 0;
+  $scope.word="";
+  $scope.wordLine="";
+  $scope.result = "";
+  $scope.displayresult = "";
+  $scope.guesses = [];
+  $("#gif").hide();
+  clearCanvas();
+  removeclass();
+
+  if($scope.category == "randomWords"){
+    $scope.getrandomWords();
+  }
+  if($scope.category == "kansasCityWords"){
+    $scope.getkansasCityWords();
+  }
+  if($scope.category == "videoGameWords"){
+    $scope.getvideoGameWords();
+  }
+  if($scope.category == "launchCodeWords"){
+    $scope.getlaunchCodeWords();
+  }
+  $scope.wordLine = $scope.gameLines.join("");
+}
+
+//canvas created hangman
+var hangman = function (){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    //bottom line
+    ctx.beginPath();
+    ctx.rect(30,190,100,2);
+    ctx.fillStyle = "black";
+    ctx.fill();
+    //left side
+    ctx.beginPath();
+    ctx.rect(30,10,12,180);
+    ctx.fillStyle = "brown";
+    ctx.fill();
+    //top bar
+    ctx.beginPath();
+    ctx.rect(30,10,85,14);
+    ctx.fillStyle = "brown";
+    ctx.fill();
+    //noose
+    ctx.moveTo(100,24);
+    ctx.lineTo(100,45);
+    ctx.stroke();
+}
+var head1 = function(){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.beginPath();
+    ctx.arc(100,58,15,0,2*Math.PI);
+    ctx.stroke();
+    //eyes
+    ctx.moveTo(95,51);
+    ctx.lineTo(95,53);
+    ctx.stroke();
+    ctx.moveTo(105,51);
+    ctx.lineTo(105,53);
+    ctx.stroke();
+    //mouth
+    ctx.beginPath();
+    ctx.arc(100,60,9,0,Math.PI);
+    ctx.stroke();
+}
+var head2 = function(){
+  var c = document.getElementById("myCanvas");
+  var ctx = c.getContext("2d");
+  ctx.beginPath();
+  ctx.arc(100,58,15,0,2*Math.PI);
+  ctx.stroke();
+  //eyes
+  ctx.moveTo(95,51);
+  ctx.lineTo(95,53);
+  ctx.stroke();
+  ctx.moveTo(105,51);
+  ctx.lineTo(105,53);
+  ctx.stroke();
+  //mouth
+  ctx.moveTo(93,64);
+  ctx.lineTo(106,64);
+  ctx.stroke();
+  //ctx.closePath();
+  ctx.stroke();
+}
+var head3 = function(){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.beginPath();
+    ctx.arc(100,58,15,0,2*Math.PI);
+    ctx.stroke();
+    //eyes
+    ctx.moveTo(95,51);
+    ctx.lineTo(95,53);
+    ctx.stroke();
+    ctx.moveTo(105,51);
+    ctx.lineTo(105,53);
+    ctx.stroke();
+    //mouth
+    ctx.beginPath();
+    ctx.arc(100,65,7,0,Math.PI,true);
+    ctx.stroke();
+    //ctx.closePath();
+    ctx.stroke();
+}
+var head4 = function(){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.beginPath();
+    ctx.arc(100,58,15,0,2*Math.PI);
+    ctx.stroke();
+    //eyes
+    ctx.moveTo(94,49);
+    ctx.lineTo(96,55);
+    ctx.stroke();
+    ctx.moveTo(98,49);
+    ctx.lineTo(92,55);
+    ctx.stroke();
+
+    ctx.moveTo(104,49);
+    ctx.lineTo(106,55);
+    ctx.stroke();
+    ctx.moveTo(108,49);
+    ctx.lineTo(102,55);
+    ctx.stroke();
+    //mouth
+    ctx.beginPath();
+    ctx.arc(100,65,4,0,2*Math.PI);
+    ctx.stroke();
+    //ctx.closePath();
+    ctx.stroke();
+}
+var body = function(){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.moveTo(100,74);
+    ctx.lineTo(100,130);
+    ctx.stroke();
+}
+var leftArm = function(){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.moveTo(100,85);
+    ctx.lineTo(80,110);
+    ctx.stroke();
+}
+var rightArm1 = function(){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.moveTo(100,85);
+    ctx.lineTo(120,110);
+    ctx.stroke();
+}
+var rightArm2 = function(){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.moveTo(100,85);
+    ctx.lineTo(130,85);
+    ctx.stroke();
+    //sign
+    ctx.moveTo(130,85);
+    ctx.lineTo(130,70);
+    ctx.stroke();
+    //bottom
+    ctx.moveTo(120,70);
+    ctx.lineTo(163,70);
+    ctx.stroke();
+    //left side
+    ctx.moveTo(120,70);
+    ctx.lineTo(120,30);
+    ctx.stroke();
+    //top
+    ctx.moveTo(120,30);
+    ctx.lineTo(163,30);
+    ctx.stroke();
+    //right side
+    ctx.moveTo(163,70);
+    ctx.lineTo(163,30);
+    ctx.stroke();
+    //h
+    ctx.moveTo(125,65);
+    ctx.lineTo(125,35);
+    ctx.stroke();
+    ctx.moveTo(130,65);
+    ctx.lineTo(130,35);
+    ctx.stroke();
+    ctx.moveTo(125,50);
+    ctx.lineTo(130,50);
+    ctx.stroke();
+    //e
+    ctx.moveTo(134,65);
+    ctx.lineTo(134,35);
+    ctx.stroke();
+    ctx.moveTo(134,65);
+    ctx.lineTo(139,65);
+    ctx.stroke();
+    ctx.moveTo(134,35);
+    ctx.lineTo(139,35);
+    ctx.stroke();
+    ctx.moveTo(134,50);
+    ctx.lineTo(139,50);
+    ctx.stroke();
+    //l
+    ctx.moveTo(143,65);
+    ctx.lineTo(143,35);
+    ctx.stroke();
+    ctx.moveTo(143,65);
+    ctx.lineTo(149,65);
+    ctx.stroke();
+    //p
+    ctx.moveTo(153,65);
+    ctx.lineTo(153,35);
+    ctx.stroke();
+    ctx.moveTo(153,35);
+    ctx.lineTo(158,35);
+    ctx.stroke();
+    ctx.moveTo(153,50);
+    ctx.lineTo(158,50);
+    ctx.stroke();
+    ctx.moveTo(158,50);
+    ctx.lineTo(158,35);
+    ctx.stroke();
+}
+var rightArm3 = function(){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.moveTo(100,85);
+    ctx.lineTo(120,110);
+    ctx.stroke();
+    //sign
+    ctx.moveTo(153,150);
+    ctx.lineTo(153,135);
+    ctx.stroke();
+    //bottom
+    ctx.moveTo(120,150);
+    ctx.lineTo(163,150);
+    ctx.stroke();
+    //left side
+    ctx.moveTo(120,150);
+    ctx.lineTo(120,190);
+    ctx.stroke();
+    //top
+    ctx.moveTo(120,190);
+    ctx.lineTo(163,190);
+    ctx.stroke();
+    //right side
+    ctx.moveTo(163,150);
+    ctx.lineTo(163,190);
+    ctx.stroke();
+    //h
+    ctx.moveTo(158,185);
+    ctx.lineTo(158,155);
+    ctx.stroke();
+    ctx.moveTo(153,185);
+    ctx.lineTo(153,155);
+    ctx.stroke();
+    ctx.moveTo(158,170);
+    ctx.lineTo(153,170);
+    ctx.stroke();
+    //e
+    ctx.moveTo(149,185);
+    ctx.lineTo(149,155);
+    ctx.stroke();
+    ctx.moveTo(144,185);
+    ctx.lineTo(149,185);
+    ctx.stroke();
+    ctx.moveTo(144,155);
+    ctx.lineTo(149,155);
+    ctx.stroke();
+    ctx.moveTo(144,170);
+    ctx.lineTo(149,170);
+    ctx.stroke();
+    //l
+    ctx.moveTo(139,185);
+    ctx.lineTo(139,155);
+    ctx.stroke();
+    ctx.moveTo(133,155);
+    ctx.lineTo(139,155);
+    ctx.stroke();
+    //p
+    ctx.moveTo(129,185);
+    ctx.lineTo(129,155);
+    ctx.stroke();
+    ctx.moveTo(129,185);
+    ctx.lineTo(124,185);
+    ctx.stroke();
+    ctx.moveTo(129,170);
+    ctx.lineTo(124,170);
+    ctx.stroke();
+    ctx.moveTo(124,170);
+    ctx.lineTo(124,185);
+    ctx.stroke();
+}
+var leftLeg = function(){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.moveTo(100,130);
+    ctx.lineTo(80,165);
+    ctx.stroke();
+}
+var rightLeg = function(){
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.moveTo(100,130);
+    ctx.lineTo(120,165);
+    ctx.stroke();
+}
+
+//clear canvas to start new game
+var clearCanvas = function(){
   var c = document.getElementById("myCanvas");
   var ctx = c.getContext("2d");
   ctx.beginPath();
   ctx.save();
   ctx.setTransform(1,0,0,1,0,0);
-  ctx.clearRect(0, 0, 200, 100);
+  ctx.clearRect(0, 0, 200, 200);
   ctx.restore();
 }
 
-//start new game
-function newGame(){
-  model.gameWord = [];
-  model.gameLines = [];
-  model.lives = 6;
-  model.word = "";
-  model.wordLine = "";
-  model.numWrong = 0;
-  model.result = "";
-  $("#gif").hide();
-  $("#lives").html(model.lives);
-  clearCanvas();
-  resetLetterBank();
-  //setGameboard();
-  if(model.category == "randomWords"){
-    getrandomWords();
-  }
-  if(model.category == "kansasCityWords"){
-    getkansasCityWords();
-  }
-  if(model.category == "videoGameWords"){
-    getvideoGameWords();
-  }
-  if(model.category == "launchCodeWords"){
-    getlaunchCodeWords();
-  }
-  $("#WORD").html(model.gameLines);
-}
-
-//reset letterbank for new game
-function resetLetterBank(){
-  $("#a").removeClass("disabled");
-  $("#b").removeClass("disabled");
-  $("#c").removeClass("disabled");
-  $("#d").removeClass("disabled");
-  $("#e").removeClass("disabled");
-  $("#f").removeClass("disabled");
-  $("#g").removeClass("disabled");
-  $("#h").removeClass("disabled");
-  $("#i").removeClass("disabled");
-  $("#j").removeClass("disabled");
-  $("#k").removeClass("disabled");
-  $("#l").removeClass("disabled");
-  $("#m").removeClass("disabled");
-  $("#n").removeClass("disabled");
-  $("#o").removeClass("disabled");
-  $("#p").removeClass("disabled");
-  $("#q").removeClass("disabled");
-  $("#r").removeClass("disabled");
-  $("#s").removeClass("disabled");
-  $("#t").removeClass("disabled");
-  $("#u").removeClass("disabled");
-  $("#v").removeClass("disabled");
-  $("#w").removeClass("disabled");
-  $("#x").removeClass("disabled");
-  $("#y").removeClass("disabled");
-  $("#z").removeClass("disabled");
-}
-
-//read letter selection and disable button
-$(function() {
-  $("#a").click(function(event){
-    updateLetter("a");
-    $("#a").addClass("disabled");
-  });
-});
-$(function() {
-  $("#b").click(function(event){
-    updateLetter("b");
-    $("#b").addClass("disabled");
-  });
-});
-$(function() {
-  $("#c").click(function(event){
-    updateLetter("c");
-    $("#c").addClass("disabled");
-  });
-});
-$(function() {
-  $("#d").click(function(event){
-      updateLetter("d");
-    $("#d").addClass("disabled");
-  });
-});
-$(function() {
-  $("#e").click(function(event){
-      updateLetter("e");
-    $("#e").addClass("disabled");
-  });
-});
-$(function() {
-  $("#f").click(function(event){
-    updateLetter("f");
-    $("#f").addClass("disabled");
-  });
-});
-$(function() {
-  $("#g").click(function(event){
-      updateLetter("g");
-    $("#g").addClass("disabled");
-  });
-});
-$(function() {
-  $("#h").click(function(event){
-        updateLetter("h");
-    $("#h").addClass("disabled");
-  });
-});
-$(function() {
-  $("#i").click(function(event){
-    updateLetter("i");
-    $("#i").addClass("disabled");
-  });
-});
-$(function() {
-  $("#j").click(function(event){
-      updateLetter("j");
-    $("#j").addClass("disabled");
-  });
-});
-$(function() {
-  $("#k").click(function(event){
-    updateLetter("k");
-    $("#k").addClass("disabled");
-  });
-});
-$(function() {
-  $("#l").click(function(event){
-    event.preventDefault();
-    updateLetter("l");
-    $("#l").addClass("disabled");
-  });
-});
-$(function() {
-  $("#m").click(function(event){
-    event.preventDefault();
-    updateLetter("m");
-    $("#m").addClass("disabled");
-  });
-});
-$(function() {
-  $("#n").click(function(event){
-    event.preventDefault();
-    updateLetter("n");
-    $("#n").addClass("disabled");
-  });
-});
-$(function() {
-  $("#o").click(function(event){
-    event.preventDefault();
-    updateLetter("o");
-    $("#o").addClass("disabled");
-  });
-});
-$(function() {
-  $("#p").click(function(event){
-    event.preventDefault();
-    updateLetter("p");
-    $("#p").addClass("disabled");
-  });
-});
-$(function() {
-  $("#q").click(function(event){
-    event.preventDefault();
-    updateLetter("q");
-    $("#q").addClass("disabled");
-  });
-});
-$(function() {
-  $("#r").click(function(event){
-    event.preventDefault();
-    updateLetter("r");
-    $("#r").addClass("disabled");
-  });
-});
-$(function() {
-  $("#s").click(function(event){
-    event.preventDefault();
-    updateLetter("s");
-    $("#s").addClass("disabled");
-  });
-});
-$(function() {
-  $("#t").click(function(event){
-    event.preventDefault();
-    updateLetter("t");
-    $("#t").addClass("disabled");
-  });
-});
-$(function() {
-  $("#u").click(function(event){
-    event.preventDefault();
-    updateLetter("u");
-    $("#u").addClass("disabled");
-  });
-});
-$(function() {
-  $("#v").click(function(event){
-    event.preventDefault();
-    updateLetter("v");
-    $("#v").addClass("disabled");
-  });
-});
-$(function() {
-  $("#w").click(function(event){
-    event.preventDefault();
-    updateLetter("w");
-    $("#w").addClass("disabled");
-  });
-});
-$(function() {
-  $("#x").click(function(event){
-    event.preventDefault();
-    updateLetter("x");
-    $("#x").addClass("disabled");
-  });
-});
-$(function() {
-  $("#y").click(function(event){
-    event.preventDefault();
-    updateLetter("y");
-    $("#y").addClass("disabled");
-  });
-});
-$(function() {
-  $("#z").click(function(event){
-    event.preventDefault();
-    updateLetter("z");
-    $("#z").addClass("disabled");
-  });
-});
-
-//DRAW HANGMAN body parts
-//starting hangman image
-//bottom line
-function hangman(){
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.moveTo(70,90);
-    ctx.lineTo(120,90);
-    ctx.stroke();
-    //left side
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.moveTo(70,90);
-    ctx.lineTo(70,10);
-    ctx.stroke();
-    //top bar
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.moveTo(70,10);
-    ctx.lineTo(100,10);
-    ctx.stroke();
-    //noose
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.moveTo(100,10);
-    ctx.lineTo(100,20);
-    ctx.stroke();
-}
-function head(){
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.beginPath();
-    ctx.arc(100,30,10,0,2*Math.PI);
-    ctx.stroke();
-    ctx.moveTo(95,27);
-    ctx.lineTo(95,28);
-    ctx.stroke();
-    ctx.moveTo(105,27);
-    ctx.lineTo(105,28);
-    ctx.stroke();
-    ctx.moveTo(97,34);
-    ctx.lineTo(103,34);
-    ctx.stroke();
-    ctx.closePath();
-}
-function body(){
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.moveTo(100,40);
-    ctx.lineTo(100,70);
-    ctx.stroke();
-}
-function leftArm(){
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.moveTo(100,50);
-    ctx.lineTo(85,60);
-    ctx.stroke();
-}
-function rightArm(){
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.moveTo(100,50);
-    ctx.lineTo(115,60);
-    ctx.stroke();
-}
-function leftLeg(){
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.moveTo(100,70);
-    ctx.lineTo(85,80);
-    ctx.stroke();
-}
-function rightLeg(){
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.moveTo(100,70);
-    ctx.lineTo(115,80);
-    ctx.stroke();
-}
-
-
-function endGame() {
-    if (model.result=="victory") {
-      (fetchAndDisplayGif());
-      $("#result").html("You Win!");
-    }else
-      if (model.result=="game over"){
-      (fetchAndDisplayGif());
-      $("#result").html("Try Again :(");
-    }
-}
-
-function fetchAndDisplayGif(event) {
+//AJAX request
+var fetchAndDisplayGif = function(event) {
     //parameters to attach to our request
     var params = {
         api_key: "dc6zaTOxFJmzC",
         //send request for win or lose GIF
-        tag : model.result
+        tag : $scope.result
     };
     $("#loader").toggle();
     // make an ajax request for a random GIF
@@ -516,17 +651,39 @@ function fetchAndDisplayGif(event) {
         }
     });
 }
-
-/**
- * toggles the visibility of UI elements based on whether a GIF is currently loaded.
- * if the GIF is loaded: displays the image and hides the feedback label
- * otherwise: hides the image and displays the feedback label
- */
-function setGifLoadedStatus(isCurrentlyLoaded) {
+var setGifLoadedStatus = function(isCurrentlyLoaded) {
     $("#gif").attr("hidden", !isCurrentlyLoaded);
     $("#feedback").attr("hidden", isCurrentlyLoaded);
 }
 
-
-
-console.log("end");
+// remove disable class from buttons
+// to start new game
+var removeclass = function(){
+  angular.element(document.querySelector("#a")).removeClass("disabled");
+  angular.element(document.querySelector("#b")).removeClass("disabled");
+  angular.element(document.querySelector("#c")).removeClass("disabled");
+  angular.element(document.querySelector("#d")).removeClass("disabled");
+  angular.element(document.querySelector("#e")).removeClass("disabled");
+  angular.element(document.querySelector("#f")).removeClass("disabled");
+  angular.element(document.querySelector("#g")).removeClass("disabled");
+  angular.element(document.querySelector("#h")).removeClass("disabled");
+  angular.element(document.querySelector("#i")).removeClass("disabled");
+  angular.element(document.querySelector("#j")).removeClass("disabled");
+  angular.element(document.querySelector("#k")).removeClass("disabled");
+  angular.element(document.querySelector("#l")).removeClass("disabled");
+  angular.element(document.querySelector("#m")).removeClass("disabled");
+  angular.element(document.querySelector("#n")).removeClass("disabled");
+  angular.element(document.querySelector("#o")).removeClass("disabled");
+  angular.element(document.querySelector("#p")).removeClass("disabled");
+  angular.element(document.querySelector("#q")).removeClass("disabled");
+  angular.element(document.querySelector("#r")).removeClass("disabled");
+  angular.element(document.querySelector("#s")).removeClass("disabled");
+  angular.element(document.querySelector("#t")).removeClass("disabled");
+  angular.element(document.querySelector("#u")).removeClass("disabled");
+  angular.element(document.querySelector("#v")).removeClass("disabled");
+  angular.element(document.querySelector("#w")).removeClass("disabled");
+  angular.element(document.querySelector("#x")).removeClass("disabled");
+  angular.element(document.querySelector("#y")).removeClass("disabled");
+  angular.element(document.querySelector("#z")).removeClass("disabled");
+}
+}]);

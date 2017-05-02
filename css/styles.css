@@ -1,3 +1,6 @@
+document {
+  background-color: #ffffe6;
+}
 html {
   margin: 40px;
 }
@@ -14,17 +17,18 @@ h1 {
   display: block;
   text-align: center;
 }
-#letters a {
+.btn-sm {
     color: white;
     background-color: rgb(52, 74, 95);
-    border-radius: 3px;
+    border-radius: 5px;
     font-style: italic;
     font-weight: bold;
     margin: 0px; 3px; 3px; 0px;
     cursor: pointer;
     text-align: center;
+    width: 38px;
 }
-#letters a:hover {
+.btn-sm:hover {
   background-color: red;
 }
 #game_word {
@@ -36,11 +40,14 @@ h1 {
     color: white;
     background-color: rgb(52, 74, 95);
     text-align: center;
-    border-radius: 3px;
+    border-radius: 5px;
     font-style: italic;
     font-weight: bold;
     cursor: pointer;
     margin: 10px;
+}
+#playAgainButton:hover{
+  color:red;
 }
 
 #myCanvas{
@@ -54,28 +61,30 @@ h1 {
 .disabled {
   opacity: 0.5;
   color: black;
+  cursor:default;
 }
-#image {
-  text-align: center;
-  width: 100%;
-}
+
+
 #result {
   font-family:"Comic Sans MS", cursive, sans-serif;
   color: green;
 }
+
 #gif {
   text-align: center;
   margin: 20px auto 20px auto;
   display: block;
 }
-
+#selection {
+  text-align: center;
+}
 
 button {
   margin: auto;
   width: 150px;
   height: 100px;
   text-align: center;
-  display: block;
+  display: inline-block;
 }
 #category {
   text-align: center;
