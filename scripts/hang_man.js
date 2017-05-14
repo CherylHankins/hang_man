@@ -1,5 +1,5 @@
 var app=angular.module("Hang_man", []);
-app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
+app.controller("GameController",['$scope',function($scope){
 
 
 var launchCodeWords = ["launchcode", "javascript",
@@ -10,15 +10,29 @@ var launchCodeWords = ["launchcode", "javascript",
           "version control", "hypertext markup language",
           "attribute", "developer", "command line"];
 
-var videoGameWords = ["mario", "yoshi", "sega", "link"];
+var videoGameWords = ["mario", "yoshi", "sega", "link",
+                      "world of warcraft", "final fantasy",
+                      "doom", "elder scroll", "nintendo",
+                      "zelda", "pokemon", "assassins creed",
+                      "call of duty", "guitar hero", "titanfall",
+                      "minecraft", "kingdom hearts", "sonic",
+                      "rockband", "atari"];
 
-var kansasCityWords = ["chiefs", "royals", "kauffman", "bar b que", "liberty memorial", "crown center",
-                         "jazz", "union station", "missouri", "kansas", "westport",
-                          "brookside", "wprlds of fun", "sprint", "country club plaza",
-                          "sporting kc", "american royal","loose park",
-                          "swope park", "harry truman"];
+var kansasCityWords = ["chiefs", "royals", "kauffman",
+                       "bar b que", "liberty memorial",
+                       "crown center", "jazz", "union station",
+                       "missouri", "kansas", "westport",
+                       "brookside", "worlds of fun", "sprint",
+                       "country club plaza", "sporting kc",
+                       "american royal","loose park",
+                       "swope park", "harry s truman"];
 
-var randomWords = ["two words", "random"];
+var randomWords = ["computer", "random", "television",
+                   "tornado", "hometown", "paper", "water",
+                   "apple", "animal", "bookend", "castle",
+                   "elephant", "career", "bridge", "zebra",
+                   "yellow", "river", "hunter", "stars", "instructor",
+                   "easel", "doctor", "graduation", "people"];
 
 // things we need to keep track of
 
@@ -39,9 +53,22 @@ $scope.result = "";
 $scope.category = "";
  // all guesses for current game
 $scope.guesses = [];
-$scope.intropage = true;
+$scope.currentPlayer = "";
+// control views
+$scope.intropage = false;
 $scope.gamepage = false;
+$scope.loginpage = true;
+$scope.letterbank = false;
+$scope.newgame = false;
+$scope.myCanvas = false;
 
+// capture current player info and change view
+$scope.add = function(){
+  console.log($scope.currentPlayer);
+  $scope.intropage = true;
+  $scope.gamepage = false;
+  $scope.loginpage = false;
+}
 // select random word from selected category
 $scope.getrandomWords = function(){
   rand = [Math.floor(Math.random() * randomWords.length)];
@@ -75,6 +102,8 @@ $scope.getlaunchCodeWords = function(){
 var setGameboard = function(){
   $scope.intropage = false;
   $scope.gamepage = true;
+  $scope.letterbank = true;
+  $scope.myCanvas = true;
   hangman();
   for (var i= 0; i< $scope.word.length; i++) {
     $scope.gameWord[i] = $scope.word.charAt(i);
@@ -259,34 +288,13 @@ $scope.endGame = function(){
       if ($scope.result=="game over"){
       fetchAndDisplayGif();
       $scope.displayresult = "Try Again :(";
-    }
-  angular.element(document.querySelector("#a")).addClass("disabled");
-  angular.element(document.querySelector("#b")).addClass("disabled");
-  angular.element(document.querySelector("#c")).addClass("disabled");
-  angular.element(document.querySelector("#d")).addClass("disabled");
-  angular.element(document.querySelector("#e")).addClass("disabled");
-  angular.element(document.querySelector("#f")).addClass("disabled");
-  angular.element(document.querySelector("#g")).addClass("disabled");
-  angular.element(document.querySelector("#h")).addClass("disabled");
-  angular.element(document.querySelector("#i")).addClass("disabled");
-  angular.element(document.querySelector("#j")).addClass("disabled");
-  angular.element(document.querySelector("#k")).addClass("disabled");
-  angular.element(document.querySelector("#l")).addClass("disabled");
-  angular.element(document.querySelector("#m")).addClass("disabled");
-  angular.element(document.querySelector("#n")).addClass("disabled");
-  angular.element(document.querySelector("#o")).addClass("disabled");
-  angular.element(document.querySelector("#p")).addClass("disabled");
-  angular.element(document.querySelector("#q")).addClass("disabled");
-  angular.element(document.querySelector("#r")).addClass("disabled");
-  angular.element(document.querySelector("#s")).addClass("disabled");
-  angular.element(document.querySelector("#t")).addClass("disabled");
-  angular.element(document.querySelector("#u")).addClass("disabled");
-  angular.element(document.querySelector("#v")).addClass("disabled");
-  angular.element(document.querySelector("#w")).addClass("disabled");
-  angular.element(document.querySelector("#x")).addClass("disabled");
-  angular.element(document.querySelector("#y")).addClass("disabled");
-  angular.element(document.querySelector("#z")).addClass("disabled");
+
   }
+  angular.element(document.querySelector("#myCanvas")).addClass("animated hinge");
+  $scope.letterbank = false;
+  $scope.newgame = true;
+  $scope.myCanvas = false;
+}
 
 //start new game with new category selection
 $scope.changeCategory = function(){
@@ -307,9 +315,12 @@ $scope.newGame = function(){
   $scope.result = "";
   $scope.displayresult = "";
   $scope.guesses = [];
+  $scope.letterbank = true;
+  $scope.newgame = false;
   $("#gif").hide();
   clearCanvas();
   removeclass();
+  angular.element(document.querySelector("#myCanvas")).removeClass("animated hinge");
 
   if($scope.category == "randomWords"){
     $scope.getrandomWords();
@@ -685,5 +696,15 @@ var removeclass = function(){
   angular.element(document.querySelector("#x")).removeClass("disabled");
   angular.element(document.querySelector("#y")).removeClass("disabled");
   angular.element(document.querySelector("#z")).removeClass("disabled");
+}
+
+$scope.logout = function() {
+  $scope.currentPlayer = "";
+  $scope.newGame();
+  $scope.intropage = false;
+  $scope.gamepage = false;
+  $scope.loginpage = true;
+  $scope.letterbank = false;
+  $scope.newgame = false;
 }
 }]);

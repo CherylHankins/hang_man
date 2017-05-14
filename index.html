@@ -11,23 +11,45 @@
   <script type= "text/javascript" src= "scripts/hang_man.js"></script>
     <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+  <!-- animation CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <!-- my CSS page-->
   <link rel="stylesheet" href="css/styles.css"/>
 
 </head>
 <body ng-app="Hang_man" ng-controller="GameController">
-  <div id= "intropage" ng-show = "intropage">
-    <div class= "container-fluid jumbotron">
+  <div id="loginpage" ng-show = "loginpage">
+    <div class= "container-fluid jumbotron animated bounceInUp" id="OpeningJumbo">
       <div class= "row">
         <div class = "col-xs-12">
-        <h1>Hangman with Angular</h1>
+        <h1 >Hangman</h1>
+        </div>
+      </div>
+    </div>
+    <div class= "container-fluid animated lightSpeedIn" id="Nameplate">
+      <div class = "row">
+        <div class = "col-xs-12">
+        <h2>Enter your name to play<h2>
+          <form ng-submit="submit">
+            <input type ="text" id="username" ng-model="currentPlayer"/>
+            <input type="button" class="btn-lg" ng-click="add(currentPlayer)" value = 'GO'/>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id= "intropage" ng-show = "intropage" class = "animated bounceInLeft">
+    <div class= "container-fluid jumbotron animated zoomIn" id="Plate">
+      <div class= "row">
+        <div class = "col-xs-12">
+        <h1>Hangman</h1>
         </div>
       </div>
     </div>
     <div class= "container">
       <div class= "row">
         <div class= "col-xs-12">
-          <span id="category"><h3>Choose a Category</h3></span>
+          <span id="category"><h3>{{currentPlayer}}, Choose a Category</h3></span>
         </div>
       </div>
     </div>
@@ -35,24 +57,24 @@
       <div class= "row">
         <div class= "col-xs-12">
           <div id="category">
-          <button type = "button" class="btn btn-primary btn-lg" ng-click="getlaunchCodeWords()">LaunchCode</button>
+          <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="Lcode" ng-click="getlaunchCodeWords()">LaunchCode</button>
           &nbsp&nbsp&nbsp&nbsp
-          <button type = "button" class="btn btn-primary btn-lg" ng-click="getvideoGameWords()">Video Games</button>
+          <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="Vgame" ng-click="getvideoGameWords()">Video Games</button>
           <br><br>
-          <button type = "button" class="btn btn-primary btn-lg" ng-click="getkansasCityWords()">Kansas City</button>
+          <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="KanCit" ng-click="getkansasCityWords()">Kansas City</button>
           &nbsp&nbsp&nbsp&nbsp
-          <button type = "button" class="btn btn-primary btn-lg" ng-click="getrandomWords()">Random</button>
+          <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="Rand" ng-click="getrandomWords()">Random</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div id= "gamepage" ng-show = "gamepage">
+  <div id= "gamepage" ng-show = "gamepage" class = "animated zoomInDown">
     <!-- set up Bootstrap container for heading -->
-  <div class= "container-fluid jumbotron">
+  <div class= "container-fluid">
     <div class= "row">
       <div class = "col-xs-12">
-      <h1>Hangman with Angular</h1>
+      <h1>Hangman</h1>
       </div>
     </div>
   </div>
@@ -60,17 +82,20 @@
   <div class= "container">
     <div class= "row">
         <!-- empty hangman noose here -->
-     <canvas id="myCanvas" "col-xs-12" width="200" height= "200" style="border:1px solid #000000;">
+     <canvas id="myCanvas" "col-xs-8" width="200" height= "200" style="border:1px solid #000000;" ng-show = "myCanvas">
        </canvas>
+
        <!-- win/lose gif here -->
+    <div class= "row">
      <div id= "image" "col-xs-12">
        <img id= "gif" src="" class= "img-responsive"/>
        <p id= "feedback" hidden= "true"></p>
        <p id= "loader" hiden= "true"></p>
      </div>
+   </div>
         <!-- game result here -->
      <div "col-xs-12">
-       <h1 id= "result">  {{displayresult}} </h1>
+       <h1 id= "result" class= "animated infinite flash"> {{ displayresult}} </h1>
        <br>
      </div>
         <!-- game blank spaces here -->
@@ -80,7 +105,7 @@
           <br>
         </div>
       </div>
-    <div class= "row" id= "letterbank">
+    <div class= "row" id= "letterbank" ng-show = "letterbank">
       <div class = "col-xs-12">
     <!-- interactive letter selection here -->
     <!-- may need to change, taking up too much space -->
@@ -115,9 +140,10 @@
       </div>
     </div>
     <div class= "row">
-      <div class = "col-xs-12">
+      <div class = "col-xs-12" ng-show = "newgame">
         <button  id="playAgainButton" ng-click = "newGame()" class="btn-block">PLAY AGAIN</button>
         <button  id="playAgainButton" ng-click = "changeCategory()" class="btn-block">CHANGE CATEGORY</button>
+        <button  id="playAgainButton" ng-click = "logout()" class="btn-block">LOG OUT</button>
       </div>
     </div>
   </div>
