@@ -22,14 +22,14 @@
     <div class= "container-fluid jumbotron animated bounceInUp" id="OpeningJumbo">
       <div class= "row">
         <div class = "col-xs-12">
-        <h1 >Hangman</h1>
+        <h1 class = "effects">Hangman</h1>
         </div>
       </div>
     </div>
     <div class= "container-fluid animated lightSpeedIn" id="Nameplate">
       <div class = "row">
         <div class = "col-xs-12">
-        <h2>Enter your name to play<h2>
+        <h2>Enter your name<h2>
           <form ng-submit="submit">
             <input type ="text" id="username" ng-model="currentPlayer"/>
             <input type="button" class="btn-lg" ng-click="add(currentPlayer)" value = 'GO'/>
@@ -37,12 +37,19 @@
         </div>
       </div>
     </div>
+    <div class = "leaderboard">
+      Leader Board
+    </div>
+    <div class = "animated zoomInUp">
+        <ul id="topscores" ng-repeat = "player in playerScores | orderBy: '-score/1' |limitTo: 5">
+          {{player.name}}  {{player.score }} % </ul>
+    </div>
   </div>
   <div id= "intropage" ng-show = "intropage" class = "animated bounceInLeft">
     <div class= "container-fluid jumbotron animated zoomIn" id="Plate">
       <div class= "row">
         <div class = "col-xs-12">
-        <h1>Hangman</h1>
+        <h1 class = "effects" >Hangman</h1>
         </div>
       </div>
     </div>
@@ -57,11 +64,11 @@
       <div class= "row">
         <div class= "col-xs-12">
           <div id="category">
-          <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="Lcode" ng-click="getlaunchCodeWords()">LaunchCode</button>
+          <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="Lcode" ng-click="getlaunchCodeWords()">Launch<br>Code</button>
           &nbsp&nbsp&nbsp&nbsp
-          <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="Vgame" ng-click="getvideoGameWords()">Video Games</button>
+          <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="Vgame" ng-click="getvideoGameWords()">Video<br>Games</button>
           <br><br>
-          <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="KanCit" ng-click="getkansasCityWords()">Kansas City</button>
+          <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="KanCit" ng-click="getkansasCityWords()">Kansas<br>City</button>
           &nbsp&nbsp&nbsp&nbsp
           <button type = "button" class="btn btn-primary btn-lg animated rollIn" id="Rand" ng-click="getrandomWords()">Random</button>
           </div>
@@ -74,7 +81,7 @@
   <div class= "container-fluid">
     <div class= "row">
       <div class = "col-xs-12">
-      <h1>Hangman</h1>
+      <h1 class = "effects">Hangman</h1>
       </div>
     </div>
   </div>
@@ -144,6 +151,7 @@
         <button  id="playAgainButton" ng-click = "newGame()" class="btn-block">PLAY AGAIN</button>
         <button  id="playAgainButton" ng-click = "changeCategory()" class="btn-block">CHANGE CATEGORY</button>
         <button  id="playAgainButton" ng-click = "logout()" class="btn-block">LOG OUT</button>
+          <p>{{currentPlayer}} {{currentPlayerStats | number: 0}}%</p>
       </div>
     </div>
   </div>

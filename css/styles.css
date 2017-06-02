@@ -1,12 +1,32 @@
-document {
-  background-color: #ffffe6;
+body {
+  background-color: #fcfcfc;
 }
-html {
-  margin: 40px;
+.jumbotron {
+  background-color: #fcfcfc;
 }
 h1 {
     color: blue;
     text-align: center;
+}
+html {
+  margin: 40px;
+}
+.effects {
+  text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 3px 0 #bbb,
+               0 4px 0 #b9b9b9,
+               0 5px 0 #aaa,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);
+  text-align: center;
+  font-size: 50px;
+  color: black;
 }
 .container {
   height: auto;
@@ -30,7 +50,6 @@ h1 {
 }
 .btn-sm:hover {
   background-color: red;
-
 }
 #game_word {
     font-family: arial black;
@@ -50,9 +69,26 @@ h1 {
 #playAgainButton:hover{
   color:green;
 }
-
 #myCanvas{
   width: 300px;
+  height: 200px;
+  text-align: center;
+  padding: 0;
+  margin: 20px auto 20px auto;
+  display: block;
+  animation-delay: .5s;
+}
+.animated.rotateIn{
+  animation-delay: 3s;
+}
+.animated.zoomInUp{
+  animation-delay: 4s;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+#logInCanvas{
+  width: 400px;
   height: 200px;
   text-align: center;
   padding: 0;
@@ -64,23 +100,19 @@ h1 {
   color: black;
   cursor:default;
 }
-
-
 #result {
   font-family:"Comic Sans MS", cursive, sans-serif;
   color: green;
-
 }
-
 #gif {
   text-align: center;
   margin: 20px auto 20px auto;
   display: block;
+  animation-delay: 2s;
 }
 #selection {
   text-align: center;
 }
-
 button {
   margin: auto;
   width: 150px;
@@ -93,42 +125,70 @@ button {
   margin: 20px auto 20px auto;
   display: block;
 }
-
-h2 {
-    color: blue;
-    text-align: center;
+#categorybutton{
+  text-align: center;
+  margin: 20px auto 20px auto;
+  display: block;
 }
-
+h2 {
+    color: grey;
+    text-align:center;
+}
+.btn-lg {
+  color: #fcfcfc;
+  background-color: green;
+}
 #Plate {
   animation-delay: 1s;
   animation-duration: 2s;
 }
-
 #Lcode {
   animation-delay: 1.75s;
+  background-color: #EE82EE;
+  color: black;
+  font-weight: bold;
+  border: 3px outset #EE82EE;
 }
-
 #Vgame {
   animation-delay: 1.5s;
+  background-color: yellow;
+  color: black;
+  font-weight: bold;
+  border: 3px outset #FFEB3B;
 }
-
 #KanCit {
   animation-delay: 1.25s;
+  background-color: #B2FF59;
+  color: black;
+  font-weight: bold;
+  border: 3px outset #B2FF59;
 }
-
 #Rand {
   animation-delay: 1s;
+  background-color: #40C4FF;
+  color: black;
+  font-weight: bold;
+  border: 3px outset #40C4FF;
 }
-
 #Nameplate {
   animation-delay: 1.75s;
   animation-duration: 1.75s;
 }
-
 #OpeningJumbo {
   animation-duration: 3.5s;
 }
-
-#myCanvas {
-  animation-delay: 1s;
+p {
+  color: green;
+  text-align:center;
+  font-size: 50px;
+}
+#topscores {
+  text-align: center;
+}
+.leaderboard {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  text-underline-position: below;
+  text-decoration: underline;
 }

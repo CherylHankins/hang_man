@@ -47,20 +47,27 @@ $scope.numWrong = 0;
   // current Game Word
 $scope.word="";
 $scope.wordLine="";
-  //result of current game
+ //result of current game
 $scope.result = "";
-  //current category selected
+ //current category selected
 $scope.category = "";
  // all guesses for current game
 $scope.guesses = [];
-$scope.currentPlayer = "";
-// control views
+ // control views
 $scope.intropage = false;
 $scope.gamepage = false;
 $scope.loginpage = true;
 $scope.letterbank = false;
 $scope.newgame = false;
 $scope.myCanvas = false;
+ //info for win/lose stats
+$scope.currentPlayer = "";
+$scope.gamesPlayed = 0;
+$scope.gamesWon = 0;
+$scope.currentPlayerStats = "";
+$scope.catName = "";
+$scope.playerScores = [];
+
 
 // capture current player info and change view
 $scope.add = function(){
@@ -104,6 +111,8 @@ var setGameboard = function(){
   $scope.gamepage = true;
   $scope.letterbank = true;
   $scope.myCanvas = true;
+  $scope.gamesPlayed += 1;
+  console.log("games played", $scope.gamesPlayed);
   hangman();
   for (var i= 0; i< $scope.word.length; i++) {
     $scope.gameWord[i] = $scope.word.charAt(i);
@@ -283,22 +292,29 @@ $scope.isDisabled = function(letter){
 $scope.endGame = function(){
   if ($scope.result=="victory") {
       fetchAndDisplayGif();
+      $scope.gamesWon += 1;
       $scope.displayresult = "You Win!";
     }else
       if ($scope.result=="game over"){
       fetchAndDisplayGif();
       $scope.displayresult = "Try Again :(";
-
   }
   angular.element(document.querySelector("#myCanvas")).addClass("animated hinge");
   $scope.letterbank = false;
   $scope.newgame = true;
-  $scope.myCanvas = false;
+  console.log("games won", $scope.gamesWon);
+  currentPlayerStats();
+}
+// calculate win percentage
+var currentPlayerStats = function(){
+  console.log($scope.gamesWon/$scope.gamesPlayed*100);
+  $scope.currentPlayerStats = ($scope.gamesWon/$scope.gamesPlayed*100);
 }
 
 //start new game with new category selection
 $scope.changeCategory = function(){
   $scope.category = "";
+  $scope.catName = "";
   $scope.gamepage = false;
   $scope.intropage = true;
   $scope.newGame();
@@ -440,11 +456,11 @@ var head4 = function(){
     ctx.lineTo(102,55);
     ctx.stroke();
     //mouth
+    ctx.fillStyle = "red";
     ctx.beginPath();
     ctx.arc(100,65,4,0,2*Math.PI);
-    ctx.stroke();
-    //ctx.closePath();
-    ctx.stroke();
+    ctx.closePath();
+    ctx.fill();
 }
 var body = function(){
     var c = document.getElementById("myCanvas");
@@ -699,12 +715,36 @@ var removeclass = function(){
 }
 
 $scope.logout = function() {
-  $scope.currentPlayer = "";
-  $scope.newGame();
+  console.log($scope.currentPlayer, $scope.currentPlayerStats);
+  $scope.playerScores.push({
+    name: $scope.currentPlayer,
+    score: $scope.currentPlayerStats
+  });
+  console.log($scope.playerScores);
+  $scope.gameWord=[];
+  $scope.gameLines=[];
+  $scope.lives = 6;
+  $scope.numWrong = 0;
+  $scope.word="";
+  $scope.wordLine="";
+  $scope.result = "";
+  $scope.category = "";
+  $scope.guesses = [];
   $scope.intropage = false;
   $scope.gamepage = false;
   $scope.loginpage = true;
   $scope.letterbank = false;
   $scope.newgame = false;
+  $scope.myCanvas = false;
+  $scope.currentPlayer = "";
+  $scope.gamesPlayed = 0;
+  $scope.gamesWon = 0;
+  $scope.currentPlayerStats = "";
+  $scope.catName = "";
+  $scope.displayresult = "";
+  $("#gif").hide();
+  clearCanvas();
+  removeclass();
+  angular.element(document.querySelector("#myCanvas")).removeClass("animated hinge");
 }
 }]);
