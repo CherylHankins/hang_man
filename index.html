@@ -19,25 +19,26 @@
 </head>
 <body ng-app="Hang_man" ng-controller="GameController">
   <div id="loginpage" ng-show = "loginpage">
-    <div class= "container-fluid jumbotron animated bounceInUp" id="OpeningJumbo">
+    <div class= "container-fluid jumbotron animated bounceInUp" id="loginJumboAnimation">
       <div class= "row">
         <div class = "col-xs-12">
-        <h1 class = "effects">Hangman</h1>
+        <h1 class = "titleEffects">Hangman</h1>
         </div>
       </div>
     </div>
-    <div class= "container-fluid animated lightSpeedIn" id="Nameplate">
+    <div class= "container-fluid animated lightSpeedIn" id="userInputAnimation">
       <div class = "row">
         <div class = "col-xs-12">
         <h2>Enter your name<h2>
           <form ng-submit="submit">
             <input type ="text" id="username" ng-model="currentPlayer"/>
+            <br><br>
             <input type="button" class="btn-lg" ng-click="add(currentPlayer)" value = 'GO'/>
           </form>
         </div>
       </div>
     </div>
-    <div class = "leaderboard">
+    <div class = "leaderboard animated fadeInLeft">
       Leader Board
     </div>
     <div class = "animated zoomInUp">
@@ -46,10 +47,10 @@
     </div>
   </div>
   <div id= "intropage" ng-show = "intropage" class = "animated bounceInLeft">
-    <div class= "container-fluid jumbotron animated zoomIn" id="Plate">
+    <div class= "container-fluid jumbotron animated zoomIn" id="introJumboAnimation">
       <div class= "row">
         <div class = "col-xs-12">
-        <h1 class = "effects" >Hangman</h1>
+        <h1 class = "titleEffects" >Hangman</h1>
         </div>
       </div>
     </div>
@@ -81,7 +82,7 @@
   <div class= "container-fluid">
     <div class= "row">
       <div class = "col-xs-12">
-      <h1 class = "effects">Hangman</h1>
+      <h1 class = "titleEffects">Hangman</h1>
       </div>
     </div>
   </div>
@@ -148,7 +149,7 @@
     </div>
     <div class= "row">
       <div class = "col-xs-12" ng-show = "newgame">
-        <button  id="playAgainButton" ng-click = "newGame()" class="btn-block">PLAY AGAIN</button>
+        <button  id="playAgainButton" ng-click = "newGame()" class="btn-block">PLAY {{catName}} AGAIN</button>
         <button  id="playAgainButton" ng-click = "changeCategory()" class="btn-block">CHANGE CATEGORY</button>
         <button  id="playAgainButton" ng-click = "logout()" class="btn-block">LOG OUT</button>
           <p>{{currentPlayer}} {{currentPlayerStats | number: 0}}%</p>

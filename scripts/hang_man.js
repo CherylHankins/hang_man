@@ -81,6 +81,7 @@ $scope.getrandomWords = function(){
   rand = [Math.floor(Math.random() * randomWords.length)];
   $scope.word = randomWords[rand];
   $scope.category = "randomWords";
+  $scope.catName = "Random";
   setGameboard();
 }
 
@@ -88,6 +89,7 @@ $scope.getkansasCityWords = function(){
   rand = [Math.floor(Math.random() * kansasCityWords.length)];
   $scope.word = kansasCityWords[rand];
   $scope.category = "kansasCityWords";
+  $scope.catName = "Kansas City";
   setGameboard();
 }
 
@@ -95,6 +97,7 @@ $scope.getvideoGameWords = function(){
   rand = [Math.floor(Math.random() * videoGameWords.length)];
   $scope.word = videoGameWords[rand];
   $scope.category = "videoGameWords";
+  $scope.catName = "Video Games";
   setGameboard();
 }
 
@@ -102,6 +105,7 @@ $scope.getlaunchCodeWords = function(){
   rand = [Math.floor(Math.random() * launchCodeWords.length)];
   $scope.word = launchCodeWords[rand];
   $scope.category = "launchCodeWords";
+  $scope.catName = "LaunchCode"
   setGameboard();
 }
 
