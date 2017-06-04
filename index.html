@@ -31,7 +31,7 @@
         <div class = "col-xs-12">
         <h2>Enter your name<h2>
           <form ng-submit="submit">
-            <input type ="text" id="username" ng-model="currentPlayer"/>
+            <input type ="text" id="username" autofocus ng-model="currentPlayer"/>
             <br><br>
             <input type="button" class="btn-lg" ng-click="add(currentPlayer)" value = 'GO'/>
           </form>
@@ -57,7 +57,7 @@
     <div class= "container">
       <div class= "row">
         <div class= "col-xs-12">
-          <span id="category"><h3>{{currentPlayer}}, Choose a Category</h3></span>
+          <span id="category"><h3 class = "animated slideInLeft">{{currentPlayer}}, Choose a Category</h3></span>
         </div>
       </div>
     </div>
