@@ -2,37 +2,149 @@ var app=angular.module("Hang_man", []);
 app.controller("GameController",['$scope',function($scope){
 
 
-var launchCodeWords = ["launchcode", "javascript",
-          "python", "cascading style sheet", "document",
-          "object oriented programming", "function",
-          "server", "frontend", "backend", "attribute",
-          "framework", "bootstrap","database", "github",
-          "version control", "hypertext markup language",
-          "attribute", "developer", "command line"];
+  var worldLandmarks = [{name:"statue of liberty", hint:"New York Harbor"},
+                    {name:"eiffel tower", hint:"Paris"},
+                    {name:"big ben", hint:"clock"},
+                    {name:"the colosseum", hint:"Rome"},
+                    {name:"notre dame", hint:"paris"},
+                    {name:"stonehenge", hint:"rocks in England"},
+                    {name:"arc de triomphe", hint: "arch in Paris"},
+                    {name:"taj mahal", hint:"India"},
+                    {name:"kilimanjaro", hint:"African mountain"},
+                    {name:"louvre", hint:"Art"},
+                    {name:"buckingham palace", hint:"Royal home"},
+                    {name:"matterhorn", hint:"Alps"},
+                    {name:"pompeii", hint:"Buried City"},
+                    {name:"christ the redeemer", hint:"Rio de Janeiro"},
+                    {name:"the grand canyon", hint:"Colorado river"},
+                    {name:"niagara falls", hint:"3 falls"},
+                    {name:"rock of gibraltar", hint:"Iberian Peninsula"},
+                    {name:"the gherkin", hint:"London tower"},
+                    {name:"moai", hint:"Polynesia"},
+                    {name:"victoria falls", hint:"Zambezi River"},
+                    {name:"wailing wall", hint:"Jerusalem"},
+                    {name:"loch ness", hint:"Scotland"},
+                    {name:"sistine chapel", hint:"Vatican City"},
+                    {name:"gateway arch", hint:"St. Louis, Missouri, USA"},
+                    {name:"kremlin", hint:"Moscow"},
+                    {name:"blue mosque", hint:"Istanbul"},
+                    {name:"winter palace", hint:"St. Petersburg"},
+                    {name:"pond du garre", hint:"Roman aqueduct"},
+                    {name:"golden gate bridge", hint:"San Francisco"}
+                  ];
 
-var videoGameWords = ["mario", "yoshi", "sega", "link",
-                      "world of warcraft", "final fantasy",
-                      "doom", "elder scroll", "nintendo",
-                      "zelda", "pokemon", "assassins creed",
-                      "call of duty", "guitar hero", "titanfall",
-                      "minecraft", "kingdom hearts", "sonic",
-                      "rockband", "atari"];
+  var videoGameWords = [{name:"tetris", hint:"stack blocks"},
+                        {name:"minecraft", hint:"survival/creative"},
+                        {name:"guitar hero", hint:"music"},
+                        {name:"assassins creed", hint:"Knights Templar"},
+                        {name:"kingdom hearts", hint:"Heartless"},
+                        {name:"fallout", hint:"Vault Dweller"},
+                        {name:"sonic", hint:"hedgehodge"},
+                        {name:"donkey kong", hint:"Ape"},
+                        {name:"grand theft auto", hint:"criminal"},
+                        {name:"portal", hint:"Glados"},
+                        {name:"halo", hint:"Master Chief"},
+                        {name:"pokemon", hint:"catch them all!"},
+                        {name:"the legend of zelda", hint:"Link"},
+                        {name:"super mario", hint:"Mario"},
+                        {name:"call of duty", hint:"mainstream FPS"},
+                        {name:"final fantasy", hint:"Square Enix"},
+                        {name:"mortal kombat", hint:"Arcade Fighter"},
+                        {name:"destiny", hint:"Guardian"},
+                        {name:"overwatch", hint:"Blizzard FPS"},
+                        {name:"world of warcraft", hint:"Blizzard RPG"},
+                        {name:"diablo", hint:"Blizzard loot grind"},
+                        {name:"titanfall", hint:"Mech FPS"},
+                        {name:"elder scrolls", hint:"Skyrim"},
+                        {name:"dragon age", hint:"Morrigan"},
+                        {name:"mass effect", hint:"Commander Shepard"},
+                        {name:"battlefield", hint:"Call of Duty with bullet drop"},
+                        {name:"league of legends", hint:"MOBA"},
+                        {name:"fire emblem", hint:"Marth"},
+                        {name:"mario cart", hint:"Racing"}
+                       ];
 
-var kansasCityWords = ["chiefs", "royals", "kauffman",
-                       "bar b que", "liberty memorial",
-                       "crown center", "jazz", "union station",
-                       "missouri", "kansas", "westport",
-                       "brookside", "worlds of fun", "sprint",
-                       "country club plaza", "sporting kc",
-                       "american royal","loose park",
-                       "swope park", "harry s truman"];
+  var capitalCities = [{name:"kabul", hint:"Afghanistan"},
+                       {name:"buenos aires", hint:"Argentina"},
+                       {name:"canberra", hint:"Australia"},
+                       {name:"vienna", hint:"Austria"},
+                       {name:"nassau", hint:"Bahamas"},
+                       {name:"minsk", hint:"Belarus"},
+                       {name:"brussels", hint:"Belgium"},
+                       {name:"sarajevo", hint:"Bosnia"},
+                       {name:"phnom penh", hint:"Cambodia"},
+                       {name:"ottawa", hint:"Canada"},
+                       {name:"santiago", hint:"Chile"},
+                       {name:"beijing", hint:"China"},
+                       {name:"san jose", hint:"Costa Rica"},
+                       {name:"havana", hint:"Cuba"},
+                       {name:"prague", hint:"Czech Republic"},
+                       {name:"copenhagen", hint:"Denmark"},
+                       {name:"cairo", hint:"Egypt"},
+                       {name:"helsinki", hint:"Finland"},
+                       {name:"paris", hint:"France"},
+                       {name:"berlin", hint:"Germany"},
+                       {name:"athens", hint:"Greece"},
+                       {name:"port au prince", hint:"Haiti"},
+                       {name:"budapest", hint:"Hungary"},
+                       {name:"reykjavik", hint:"Iceland"},
+                       {name:"new delhi", hint:"India"},
+                       {name:"jakarta", hint:"Indonesia"},
+                       {name:"tehran", hint:"Iran"},
+                       {name:"baghdad", hint:"Iraq"},
+                       {name:"dublin", hint:"Ireland"},
+                       {name:"jerusalem", hint:"Israel"},
+                       {name:"rome", hint:"Italy"},
+                       {name:"tokyo", hint:"Japan"},
+                       {name:"nairobi", hint:"Kenya"},
+                       {name:"beirut", hint:"Lebanon"},
+                       {name:"mexico city", hint:"Mexico"},
+                       {name:"monaco", hint:"Monaco"},
+                       {name:"wellington", hint:"New Zealand"},
+                       {name:"oslo", hint:"Norway"},
+                       {name:"lima", hint:"Peru"},
+                       {name:"warsaw", hint:"Poland"},
+                       {name:"moscow", hint:"Russia"},
+                       {name:"singapore", hint:"Singapore"},
+                       {name:"seoul", hint:"South Korea"},
+                       {name:"madrid", hint:"Spain"},
+                       {name:"stockholm", hint:"Sweden"},
+                       {name:"bern", hint:"Switzerland"},
+                       {name:"damascus", hint:"Syria"},
+                       {name:"taipei", hint:"Taiwan"},
+                       {name:"washington d c", hint:"United States"},
+                       {name:"caracas", hint:"Venezuela"},
+                       {name:"hanoi", hint:"Vietnam"}
+                     ];
 
-var randomWords = ["computer", "random", "television",
-                   "tornado", "hometown", "paper", "water",
-                   "apple", "animal", "bookend", "castle",
-                   "elephant", "career", "bridge", "zebra",
-                   "yellow", "river", "hunter", "stars", "instructor",
-                   "easel", "doctor", "graduation", "people"];
+  var popCulture = [{name:"taylor swift", hint:"Album of the Year artist"},
+                    {name:"ryan reynolds", hint:"Deadpool"},
+                    {name:"george martin", hint:"'Fifth Beatle'"},
+                    {name:"superman", hint:"Batman v "},
+                    {name:"rio de janeiro", hint:"2016 Olympics"},
+                    {name:"rolling stones", hint:"played free concert in Cuba"},
+                    {name:"zootopia", hint: "2016 Disney film"},
+                    {name:"nyquist", hint:"Kentucky Derby"},
+                    {name:"pittsburgh penguins", hint:"Stanley Cup"},
+                    {name:"denver broncos", hint:"Super Bowl"},
+                    {name:"sully", hint:"Tom Hanks role"},
+                    {name:"finding dory", hint:"Disney fish"},
+                    {name:"jason bourne", hint:"Matt Damon"},
+                    {name:"cake by the ocean", hint:"DNCE"},
+                    {name:"bruno mars", hint:"24k Magic"},
+                    {name:"keith urban", hint:"Blue Ain't Your Color"},
+                    {name:"muhammad ali", hint:"boxing great"},
+                    {name:"brexit", hint:"European Union"},
+                    {name:"carrie fisher", hint:"debbie reynolds"},
+                    {name:"lemonade", hint:"Beyonce"},
+                    {name:"michael phelps", hint:"Olympic swimmer"},
+                    {name:"fences", hint:"Denzel and Viola"},
+                    {name:"suicide squad", hint:"anti-hero team"},
+                    {name:"hidden figures", hint:"NASA females"},
+                    {name:"prince", hint:"purple"},
+                    {name:"gene wilder", hint:"original willy wonka"},
+                    {name:"glenn frey", hint:"The Eagles"}
+                  ];
 
 // things we need to keep track of
 
@@ -67,7 +179,8 @@ $scope.gamesWon = 0;
 $scope.currentPlayerStats = "";
 $scope.catName = "";
 $scope.playerScores = [];
-
+  // display gameword hint
+$scope.HINT = false;
 
 // capture current player info and change view
 $scope.add = function(){
@@ -77,35 +190,43 @@ $scope.add = function(){
   $scope.loginpage = false;
 }
 // select random word from selected category
-$scope.getrandomWords = function(){
-  rand = [Math.floor(Math.random() * randomWords.length)];
-  $scope.word = randomWords[rand];
-  $scope.category = "randomWords";
-  $scope.catName = "Random";
+$scope.getpopCulture = function(){
+  rand = [Math.floor(Math.random() * popCulture.length)];
+  selection = popCulture[rand];
+  $scope.word = selection.name;
+  $scope.hint = selection.hint;
+  $scope.category = "popCulture";
+  $scope.catName = "2016 Pop Culture";
   setGameboard();
 }
 
-$scope.getkansasCityWords = function(){
-  rand = [Math.floor(Math.random() * kansasCityWords.length)];
-  $scope.word = kansasCityWords[rand];
-  $scope.category = "kansasCityWords";
-  $scope.catName = "Kansas City";
+$scope.getcapitalCities = function(){
+  rand = [Math.floor(Math.random() * capitalCities.length)];
+  selection = capitalCities[rand];
+  $scope.word = selection.name;
+  $scope.hint = selection.hint;
+  $scope.category = "capitalCities";
+  $scope.catName = "Capital Cities";
   setGameboard();
 }
 
 $scope.getvideoGameWords = function(){
   rand = [Math.floor(Math.random() * videoGameWords.length)];
-  $scope.word = videoGameWords[rand];
+  selection = videoGameWords[rand];
+  $scope.word = selection.name;
+  $scope.hint = selection.hint;
   $scope.category = "videoGameWords";
   $scope.catName = "Video Games";
   setGameboard();
 }
 
-$scope.getlaunchCodeWords = function(){
-  rand = [Math.floor(Math.random() * launchCodeWords.length)];
-  $scope.word = launchCodeWords[rand];
-  $scope.category = "launchCodeWords";
-  $scope.catName = "LaunchCode"
+$scope.getworldLandmarks = function(){
+  rand = [Math.floor(Math.random() * worldLandmarks.length)];
+  selection = worldLandmarks[rand];
+  $scope.word = selection.name;
+  $scope.hint = selection.hint;
+  $scope.category = "worldLandmarks";
+  $scope.catName = "World Landmarks";
   setGameboard();
 }
 
@@ -167,6 +288,7 @@ $scope.updateLetter = function(letter) {
       head2();
       body();
       leftArm();
+      $scope.HINT = true;
     }
     if($scope.numWrong == 4){
       clearCanvas();
@@ -337,22 +459,23 @@ $scope.newGame = function(){
   $scope.guesses = [];
   $scope.letterbank = true;
   $scope.newgame = false;
+  $scope.HINT = false;
   $("#gif").hide();
   clearCanvas();
   removeclass();
   angular.element(document.querySelector("#myCanvas")).removeClass("animated hinge");
 
-  if($scope.category == "randomWords"){
-    $scope.getrandomWords();
+  if($scope.category == "popCulture"){
+    $scope.getpopCulture();
   }
-  if($scope.category == "kansasCityWords"){
-    $scope.getkansasCityWords();
+  if($scope.category == "capitalCities"){
+    $scope.getcapitalCities();
   }
   if($scope.category == "videoGameWords"){
     $scope.getvideoGameWords();
   }
-  if($scope.category == "launchCodeWords"){
-    $scope.getlaunchCodeWords();
+  if($scope.category == "worldLandmarks"){
+    $scope.getworldLandmarks();
   }
   $scope.wordLine = $scope.gameLines.join("");
 }
@@ -746,6 +869,7 @@ $scope.logout = function() {
   $scope.currentPlayerStats = "";
   $scope.catName = "";
   $scope.displayresult = "";
+  $scope.HINT = false;
   $("#gif").hide();
   clearCanvas();
   removeclass();

@@ -151,11 +151,15 @@ button {
   text-align: center;
   margin: 20px auto 20px auto;
   display: block;
-  animation-delay: 2s;
+  animation-delay: 1.75s;
 }
 #WORD {
     color: black;
     text-align: center;
+}
+#HINT {
+  color: black;
+  text-align: center;
 }
 #game_word {
     font-family: arial black;
